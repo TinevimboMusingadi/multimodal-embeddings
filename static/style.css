@@ -1,0 +1,233 @@
+/* Local Image Search – clean, modern UI */
+
+:root {
+  --bg: #0f0f12;
+  --surface: #1a1a20;
+  --border: #2a2a32;
+  --text: #e8e8ed;
+  --muted: #8888a0;
+  --accent: #6c8ae8;
+  --accent-hover: #7d9af0;
+  --error: #e86c6c;
+  --radius: 10px;
+  --font: "DM Sans", system-ui, -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+  background-image: radial-gradient(ellipse 120% 80% at 50% -20%, rgba(108, 138, 232, 0.12), transparent);
+}
+
+.header {
+  padding: 2rem 1.5rem;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.header h1 {
+  margin: 0 0 0.25rem;
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.tagline {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.search-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.tab {
+  padding: 0.5rem 1rem;
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+
+.tab:hover {
+  color: var(--text);
+}
+
+.tab.active {
+  color: var(--text);
+  background: rgba(108, 138, 232, 0.15);
+  border-color: var(--accent);
+}
+
+.search-form label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.search-form input[type="text"] {
+  width: 100%;
+  padding: 0.65rem 0.9rem;
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.search-form input[type="text"]:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(108, 138, 232, 0.2);
+}
+
+.search-form input[type="file"] {
+  width: 100%;
+  padding: 0.5rem 0;
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+
+.search-form input[type="file"]::file-selector-button {
+  margin-right: 0.75rem;
+  padding: 0.4rem 0.75rem;
+  font-family: inherit;
+  font-size: 0.85rem;
+  color: var(--text);
+  background: var(--border);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-search {
+  padding: 0.6rem 1.25rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #fff;
+  background: var(--accent);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-search:hover {
+  background: var(--accent-hover);
+}
+
+.btn-search:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(108, 138, 232, 0.35);
+}
+
+.input-wrap.hidden {
+  display: none;
+}
+
+.status {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.status.error {
+  color: var(--error);
+}
+
+.status.hidden {
+  display: none;
+}
+
+.results-section {
+  margin-top: 2rem;
+}
+
+.results-section.hidden {
+  display: none;
+}
+
+.results-section h2 {
+  margin: 0 0 1rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
+}
+
+.result-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s, transform 0.1s;
+}
+
+.result-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.result-card img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 6px;
+  display: block;
+}
+
+.result-card .score {
+  margin-top: 0.4rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.no-results {
+  color: var(--muted);
+  font-size: 0.95rem;
+}

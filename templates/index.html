@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Local Image Search</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="header">
+    <h1>Local Image Search</h1>
+    <p class="tagline">Text or image → find similar images from your index</p>
+  </header>
+
+  <main class="main">
+    <section class="search-section">
+      <div class="tabs">
+        <button type="button" class="tab active" data-tab="text" aria-selected="true">Text search</button>
+        <button type="button" class="tab" data-tab="image" aria-selected="false">Image search</button>
+      </div>
+
+      <form id="search-form" class="search-form">
+        <div id="text-input-wrap" class="input-wrap">
+          <label for="text-query">Search by description</label>
+          <input type="text" id="text-query" name="text" placeholder="e.g. sunset, person, landscape" autocomplete="off">
+        </div>
+        <div id="image-input-wrap" class="input-wrap hidden">
+          <label for="image-upload">Upload an image to find similar</label>
+          <input type="file" id="image-upload" name="image" accept="image/jpeg,image/png,image/gif,image/webp">
+        </div>
+        <button type="submit" class="btn-search">Search</button>
+      </form>
+
+      <div id="status" class="status hidden" role="status"></div>
+    </section>
+
+    <section id="results-section" class="results-section hidden">
+      <h2>Results</h2>
+      <div id="results-grid" class="results-grid"></div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      const form = document.getElementById('search-form');
+      const textWrap = document.getElementById('text-input-wrap');
+      const imageWrap = document.getElementById('image-input-wrap');
+      const textQuery = document.getElementById('text-query');
+      const imageUpload = document.getElementById('image-upload');
+      const statusEl = document.getElementById('status');
+      const resultsSection = document.getElementById('results-section');
+      const resultsGrid = document.getElementById('results-grid');
+      const tabs = document.querySelectorAll('.tab');
+
+      function setTab(which) {
+        tabs.forEach(function (t) {
+          const isActive = t.dataset.tab === which;
+          t.classList.toggle('active', isActive);
+          t.setAttribute('aria-selected', isActive);
+        });
+        textWrap.classList.toggle('hidden', which !== 'text');
+        imageWrap.classList.toggle('hidden', which !== 'image');
+        if (which === 'image') {
+          textQuery.removeAttribute('name');
+          textQuery.value = '';
+          imageUpload.setAttribute('name', 'image');
+        } else {
+          imageUpload.removeAttribute('name');
+          imageUpload.value = '';
+          textQuery.setAttribute('name', 'text');
+        }
+      }
+
+      tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          setTab(tab.dataset.tab);
+        });
+      });
+
+      function showStatus(msg, isError) {
+        statusEl.textContent = msg;
+        statusEl.classList.remove('hidden', !msg);
+        statusEl.classList.toggle('error', isError);
+      }
+
+      function renderResults(results) {
+        resultsGrid.innerHTML = '';
+        if (!results.length) {
+          resultsGrid.innerHTML = '<p class="no-results">No results.</p>';
+          resultsSection.classList.remove('hidden');
+          return;
+        }
+        results.forEach(function (r) {
+          const a = document.createElement('a');
+          a.href = '/images/' + encodeURIComponent(r.path);
+          a.className = 'result-card';
+          a.setAttribute('target', '_blank');
+          a.setAttribute('rel', 'noopener');
+          const img = document.createElement('img');
+          img.src = '/images/' + encodeURIComponent(r.path);
+          img.alt = r.path;
+          img.loading = 'lazy';
+          const score = document.createElement('span');
+          score.className = 'score';
+          score.textContent = 'score: ' + (r.score != null ? r.score.toFixed(3) : '—');
+          a.appendChild(img);
+          a.appendChild(score);
+          resultsGrid.appendChild(a);
+        });
+        resultsSection.classList.remove('hidden');
+      }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const useImage = imageWrap.classList.contains('hidden') === false;
+        const fd = new FormData();
+        if (useImage && imageUpload.files && imageUpload.files[0]) {
+          fd.append('image', imageUpload.files[0]);
+        } else if (textQuery.value.trim()) {
+          fd.append('text', textQuery.value.trim());
+        } else {
+          showStatus('Enter text or choose an image.', true);
+          return;
+        }
+
+        showStatus('Searching…', false);
+        resultsSection.classList.add('hidden');
+
+        fetch('/api/search', {
+          method: 'POST',
+          body: fd
+        })
+          .then(function (res) {
+            return res.json().then(function (data) {
+              if (!res.ok) throw new Error(data.error || data.detail || res.statusText);
+              return data;
+            });
+          })
+          .then(function (data) {
+            showStatus('');
+            renderResults(data.results || []);
+          })
+          .catch(function (err) {
+            showStatus(err.message || 'Search failed.', true);
+            renderResults([]);
+          });
+      });
+    })();
+  </script>
+</body>
+</html>
