@@ -12,6 +12,8 @@ load_dotenv(_root / "key.env", override=False)
 
 PROJECT_ID: str = os.environ.get("GOOGLE_CLOUD_PROJECT") or os.environ.get("PROJECT_ID") or ""
 VERTEX_LOCATION: str = os.environ.get("VERTEX_LOCATION", "us-central1")
+# API key (e.g. from express mode); loaded from .env / key.env for clients that support it
+GOOGLE_API_KEY: str = os.environ.get("GOOGLE_API_KEY") or os.environ.get("API_KEY") or ""
 EMBEDDING_DIMENSION: int = 512
 
 # Paths

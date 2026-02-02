@@ -31,7 +31,8 @@ copy .env.example .env
 Edit `.env`:
 
 - **GOOGLE_CLOUD_PROJECT** (or **PROJECT_ID**): Your GCP project ID (required for Vertex AI).
-- **GOOGLE_APPLICATION_CREDENTIALS**: Path to your service account JSON key file (full access / Cloud API). The code reads this from the env file.
+- **GOOGLE_API_KEY** (or **API_KEY**): Your Google Cloud API key (e.g. from Vertex express mode). The code loads this from `.env` or `key.env` and uses it when the client supports it.
+- **GOOGLE_APPLICATION_CREDENTIALS**: Path to your service account JSON key file (optional if using API key).
 - **VERTEX_LOCATION**: Vertex AI region (optional; default `us-central1`).
 
 The app loads `.env` first, then `key.env` if present. Do not commit `.env` or `key.env`; they are in `.gitignore`.
