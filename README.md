@@ -20,21 +20,21 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
-### 3. Environment (key.env)
+### 3. Environment (.env or key.env)
 
-Copy the example and fill in your values:
+Copy the example and put your key and project settings in `.env` (or `key.env`):
 
 ```bash
-copy key.env.example key.env
+copy .env.example .env
 ```
 
-Edit `key.env`:
+Edit `.env`:
 
 - **GOOGLE_CLOUD_PROJECT** (or **PROJECT_ID**): Your GCP project ID (required for Vertex AI).
-- **GOOGLE_APPLICATION_CREDENTIALS**: Path to your service account JSON key file (optional if you use `gcloud application-default login`).
+- **GOOGLE_APPLICATION_CREDENTIALS**: Path to your service account JSON key file (full access / Cloud API). The code reads this from the env file.
 - **VERTEX_LOCATION**: Vertex AI region (optional; default `us-central1`).
 
-Do not commit `key.env`; it is listed in `.gitignore`.
+The app loads `.env` first, then `key.env` if present. Do not commit `.env` or `key.env`; they are in `.gitignore`.
 
 ### 4. Index your images
 

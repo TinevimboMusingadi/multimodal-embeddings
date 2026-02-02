@@ -13,7 +13,7 @@ _model: MultiModalEmbeddingModel | None = None
 
 def _ensure_init() -> None:
     if PROJECT_ID is None or PROJECT_ID == "":
-        raise ValueError("PROJECT_ID or GOOGLE_CLOUD_PROJECT must be set (e.g. in key.env)")
+        raise ValueError("PROJECT_ID or GOOGLE_CLOUD_PROJECT must be set in .env or key.env")
     vertexai.init(project=PROJECT_ID, location=VERTEX_LOCATION)
 
 

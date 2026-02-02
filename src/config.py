@@ -1,12 +1,13 @@
-"""Load config from key.env. Single place for project, location, index path, dimension."""
+"""Load config from .env (or key.env). Single place for project, location, key, index path, dimension."""
 
 import os
 from pathlib import Path
 
 from dotenv import load_dotenv
 
-# Load key.env from project root (parent of src/)
+# Load .env first, then key.env (so .env overrides). Either file can hold the key and project settings.
 _root = Path(__file__).resolve().parent.parent
+load_dotenv(_root / ".env", override=False)
 load_dotenv(_root / "key.env", override=False)
 
 PROJECT_ID: str = os.environ.get("GOOGLE_CLOUD_PROJECT") or os.environ.get("PROJECT_ID") or ""
